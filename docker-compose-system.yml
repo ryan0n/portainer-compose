@@ -1,5 +1,4 @@
 version: "3.8"
-name: "pve"
 
 networks:
   shared-bridge:
@@ -21,3 +20,18 @@ services:
       - --log-level=DEBUG
       - --admin-password=${DEFAULT_PASSWORD}
       - --templates="https://raw.githubusercontent.com/technorabilia/portainer-templates/main/lsio/templates/templates-2.0.json"
+
+  nginx-proxy-manager:
+    container_name: nginx-proxy-manager
+    image: jc21/nginx-proxy-manager
+    environment:
+      - TZ=America/Los_Angeles
+    ports:
+      - 443:443/tcp
+      - 80:80/tcp
+      - 81:81/tcp
+    volumes:
+      - ${DATA_APPS}/nginx-proxy-manager/data:/data
+      - ${DATA_APPS}/nginx-proxy-manager/letsencrypt:/etc/letsencrypt
+      - /pve/fast-logs/nginx-proxy-manager:/var/log
+    restart: always
