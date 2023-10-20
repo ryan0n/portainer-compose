@@ -1,0 +1,23 @@
+version: "3.8"
+name: "pve"
+
+networks:
+  shared-bridge:
+    name: shared-bridge
+    driver: bridge
+
+services:
+  portainer-pve:
+    image: portainer/portainer-ce:latest
+    networks:
+      - shared-bridge
+    volumes:
+      - ${DATA_APPS}/portainer:/data
+      - ${DATA_PVE}:/pve
+    ports:
+      - 9000:9000
+    restart: always
+    command:
+      - --log-level=DEBUG
+      - --admin-password=${DEFAULT_PASSWORD}
+      - --templates="https://raw.githubusercontent.com/technorabilia/portainer-templates/main/lsio/templates/templates-2.0.json"
